@@ -1,0 +1,49 @@
+body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#pinPoints {
+    margin: 5em auto;
+    width: 300px;
+}
+
+.origin-point {
+    color: white; 
+    font-weight: bold; 
+    background-color: #06a; 
+    text-align: center; 
+    line-height: 40px;
+    width: 15%; 
+    padding-top: 15%;    
+    -webkit-border-radius: 100%; 
+    -moz-border-radius: 100%; 
+    border-radius: 100%;
+    float: left;
+    margin: 9%;
+}
+
+.new-link-line {
+    position: absolute;
+    width: 3px;
+    background-color: rgba(0, 102, 170, 0.4);
+    z-index: 100;
+    -webkit-transform-origin: top left;
+    -moz-transform-origin: top left;
+    -o-transform-origin: top left;
+    -ms-transform-origin: top left;
+    transform-origin: top left;
+}
+
+@media only screen and (min-width: 600px) {
+    #pinPoints {
+        margin: 5em auto; 
+        width: 400px;
+    }
+}
+@media only screen and (min-width: 768px) {
+    #pinPoints {
+        margin: 5em auto; 
+        width: 600px;
+    }
+}
