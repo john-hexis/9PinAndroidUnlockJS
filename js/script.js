@@ -32,8 +32,8 @@ function createLinkMode(pointId) {
     var originX = $('div.origin-point[point="' + pointId + '"]').offset().left + $('div.origin-point[point="' + pointId + '"]').outerWidth() / 2;
     var originY = $('div.origin-point[point="' + pointId + '"]').offset().top + $('div.origin-point[point="' + pointId + '"]').outerHeight() / 2;
     linkLine
-        .css('top', originY + ($('div.origin-point[point="' + pointId + '"]').outerWidth() / 2))
-        .css('left', originX + ($('div.origin-point[point="' + pointId + '"]').outerHeight() / 2));
+        .css('top', originY)
+        .css('left', originX);
     
     $(document).bind('mousemove', function(e) {
         e.preventDefault();
