@@ -64,8 +64,8 @@ function linkMouseMoveEvent(event, pointId) {
         var currPos = normalizePosition(event);
         console.log('MMove New Link Line X (count): ' + $('div.new-link-line[pointto="x"]').length + '');
         $('div.origin-point').each(function () {
-            var currX = currPos.x + (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().left : 0);
-            var currY = currPos.y + (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().top : 0);
+            var currX = currPos.x;// + (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().left : 0);
+            var currY = currPos.y;//+ (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().top : 0);
             var pointXLeft = $(this).offset().left;
             var pointXRight = $(this).offset().left + $(this).outerWidth();
             var pointYTop = $(this).offset().top;
@@ -74,7 +74,7 @@ function linkMouseMoveEvent(event, pointId) {
             if (currX >= pointXLeft && currX <= pointXRight && currY >= pointYTop && currY <= pointYBottom) {
                 currX = pointXLeft + ($(this).outerWidth() / 2);
                 currY = pointYTop + ($(this).outerHeight() / 2);
-
+                console.log('MMove New Link Line X (coor): OriX: ' + originX + ' ; OriY: ' + originY + ' ; CurrX: ' + currX + ' ; CurrY: ' + currY + '');
                 setTransformEndPoint(originX, originY, currX, currY, function () {
                     
                 });
