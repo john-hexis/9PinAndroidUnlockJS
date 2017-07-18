@@ -168,7 +168,7 @@ function endLinkMode(pointFrom, pointTo, finished) {
     $('div.new-link-line[pointto="x"]').each(function () {
         $(this).remove();
     });
-    $(document).unbind('mousemove').unbind('mousemove.link').unbind('click.link').unbind('keydown.link');
+    $(document).unbind('mousemove').unbind('touchmove').unbind('mouseup').unbind('touchup').unbind('mousemove.link').unbind('click.link').unbind('keydown.link');
     if (finished != undefined) {
         finished();
     }
