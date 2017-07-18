@@ -189,33 +189,42 @@ function beginPattern() {
 function endPattern() {
     uninit();
     if (isRegister) {
+        if (savedPattern.length == 0 && patternNum.length == 0) {
+            return;
+        }
         savedPattern = patternNum;
-        patternNum = [];
         isRegister = false;
+        $('#result').addClass('success');
+        $('#result').removeClass('failed');
+        $('#label').html('');
+        $('#result').html('Pattern is successfully saved.');
         setTimeout(function () {
             beginPattern();
         }, 2000);
     }
     else {
-        if (isValid()) {
-            savedPattern = [];
-            isRegister = true;
-            $('#result').addClass('success');
-            $('#result').removeClass('failed');
-            $('#result').html('Congratulation your pattern is matched.');
-        }
-        else {
-            $('#result').addClass('failed');
-            $('#result').removeClass('success');
-            $('#result').html('Sorry your pattern is not matched.');
+        if (patternNum.length > 0) {
+            if (isValid()) {
+                savedPattern = [];
+                isRegister = true;
+                $('#result').addClass('success');
+                $('#result').removeClass('failed');
+                $('#label').html('');
+                $('#result').html('Congratulation your pattern is matched.');
+            }
+            else {
+                $('#result').addClass('failed');
+                $('#result').removeClass('success');
+                $('#label').html('');
+                $('#result').html('Sorry your pattern is not matched.');
+            }
         }
         
         setTimeout(function () {
             beginPattern();
-        }, 2000);
-        patternNum = [];
+        }, 3000);
     }
-    
+    patternNum = [];
     $('div#lines').html('');
 }
 
