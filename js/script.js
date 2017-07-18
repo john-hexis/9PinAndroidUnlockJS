@@ -187,14 +187,14 @@ function beginPattern() {
 }
 
 function endPattern() {
+    uninit();
     if (isRegister) {
         savedPattern = patternNum;
         patternNum = [];
         isRegister = false;
-        uninit();
         setTimeout(function () {
             beginPattern();
-        }, 1000);
+        }, 2000);
     }
     else {
         if (isValid()) {
@@ -209,7 +209,7 @@ function endPattern() {
             $('#result').removeClass('success');
             $('#result').html('Sorry your pattern is not matched.');
         }
-        uninit();
+        
         setTimeout(function () {
             beginPattern();
         }, 2000);
@@ -231,6 +231,9 @@ function isValid() {
             var saved = savedPattern[index];
             result &= (curr == saved);
         }
+    }
+    else {
+        result = false;
     }
     return result;
 }
