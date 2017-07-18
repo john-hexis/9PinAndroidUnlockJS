@@ -8,6 +8,18 @@ body {
     width: 300px;
 }
 
+#pinPoints h1,h2,h3,p {
+    text-align: center;
+}
+
+#pinPoints h2.failed {
+    color: red
+}
+
+#pinPoints h2.success {
+    color: green
+}
+
 .origin-point {
     color: white; 
     font-weight: bold; 

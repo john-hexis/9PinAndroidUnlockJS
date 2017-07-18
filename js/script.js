@@ -1,21 +1,34 @@
 //// <reference path="jquery-3.1.1.js" /> 
 var patternNum = [];
 var savedPattern = [];
+var cursor = {};
+var isRegister = true;
 
 $(document).ready(function() {
+    beginPattern();
+});
+
+function init() {
     $('div.origin-point').each(function () {
-        var pointId = $(this).attr('point');
         $(this).on('mousedown', function(e) {
             e.preventDefault();
+            var pointId = $(this).attr('point');
             startLinkMode(pointId, e);
         });
 
         $(this).on('touchstart', function(e) {
             e.preventDefault();
+            var pointId = $(this).attr('point');
             startLinkMode(pointId, e);
         });
     });
-});
+}
+
+function uninit() {
+    $('div.origin-point').each(function () {
+        $(this).unbind('mousedown').unbind('touchstart');
+    });
+}
 
 function startLinkMode(pointId, event) {
     if ($('div.new-link-line').length > 0) {
@@ -34,7 +47,7 @@ function createLinkMode(pointId) {
     linkLine
         .css('top', originY)
         .css('left', originX);
-    
+    console.log('[START]Create New Link Line X (coor): OriX: ' + originX + ' ; OriY: ' + originY + ' ; ');
     $(document).bind('mousemove', function(e) {
         e.preventDefault();
         linkMouseMoveEvent(e, pointId);
@@ -49,11 +62,13 @@ function createLinkMode(pointId) {
     $(document).bind('mouseup', function(e) {
         e.preventDefault();
         endLinkMode();
+        endPattern();
     });
 
     $(document).bind('touchend', function(e) {
         e.preventDefault();
         endLinkMode();
+        endPattern();
     });
 }
     
@@ -61,26 +76,30 @@ function linkMouseMoveEvent(event, pointId) {
     if($('div.new-link-line[pointfrom="' + pointId + '"][pointto="x"]').length > 0) {
         var originX = $('div.origin-point[point="' + pointId + '"]').offset().left + $('div.origin-point[point="' + pointId + '"]').outerWidth() / 2;
         var originY = $('div.origin-point[point="' + pointId + '"]').offset().top + $('div.origin-point[point="' + pointId + '"]').outerHeight() / 2;
+           
+        // var originX = $('div.new-link-line[pointfrom="' + pointId + '"][pointto="x"]').offset().left + $('div.origin-point[point="' + pointId + '"]').outerWidth() / 2;
+        // var originY = $('div.new-link-line[pointfrom="' + pointId + '"][pointto="x"]').offset().top + $('div.origin-point[point="' + pointId + '"]').outerHeight() / 2;
         var currPos = normalizePosition(event);
         console.log('MMove New Link Line X (count): ' + $('div.new-link-line[pointto="x"]').length + '');
         $('div.origin-point').each(function () {
             var currX = currPos.x;// + (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().left : 0);
-            var currY = currPos.y;//+ (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().top : 0);
+            var currY = currPos.y;// + (event.targetTouches? $('div.origin-point[point="' + pointId + '"]').offset().top : 0);
             var pointXLeft = $(this).offset().left;
             var pointXRight = $(this).offset().left + $(this).outerWidth();
             var pointYTop = $(this).offset().top;
             var pointYBottom = $(this).offset().top + $(this).outerHeight();
-
+            console.log('[BEFORE]MMove New Link Line X (coor): OriX: ' + originX + ' ; OriY: ' + originY + ' ; CurrX: ' + currX + ' ; CurrY: ' + currY + ' ; CurrPosX: ' + currPos.x + ' ; CurrPosY: ' + currPos.y + '');
             if (currX >= pointXLeft && currX <= pointXRight && currY >= pointYTop && currY <= pointYBottom) {
                 currX = pointXLeft + ($(this).outerWidth() / 2);
                 currY = pointYTop + ($(this).outerHeight() / 2);
-                console.log('MMove New Link Line X (coor): OriX: ' + originX + ' ; OriY: ' + originY + ' ; CurrX: ' + currX + ' ; CurrY: ' + currY + '');
+                console.log('[IN]MMove New Link Line X (coor): OriX: ' + originX + ' ; OriY: ' + originY + ' ; CurrX: ' + currX + ' ; CurrY: ' + currY + ' ; CurrPosX: ' + currPos.x + ' ; CurrPosY: ' + currPos.y + '');
                 setTransformEndPoint(originX, originY, currX, currY, function () {
                     
                 });
                 storeLinkMode(pointId, $(this).attr('point'));
             }
             else {
+                console.log('[OUT]MMove New Link Line X (coor): OriX: ' + originX + ' ; OriY: ' + originY + ' ; CurrX: ' + currX + ' ; CurrY: ' + currY + ' ; CurrPosX: ' + currPos.x + ' ; CurrPosY: ' + currPos.y + '');
                 setTransformEndPoint(originX, originY, currX, currY);
             }
         });
@@ -93,14 +112,14 @@ function normalizePosition(evt){
     if(evt.targetTouches){
         position.x = evt.targetTouches[0].pageX;
         position.y = evt.targetTouches[0].pageY;
+        console.log('[TOUCH]Normalize Pos: pageX: ' + position.x + ' ; pageY: ' + position.y + '');
+        // var parent = evt.target;
+        // while(parent.offsetParent){
+        // position.x -= parent.offsetLeft - parent.scrollLeft;
+        // position.y -= parent.offsetTop - parent.scrollTop;
 
-        var parent = evt.target;
-        while(parent.offsetParent){
-        position.x -= parent.offsetLeft - parent.scrollLeft;
-        position.y -= parent.offsetTop - parent.scrollTop;
-
-        parent = parent.offsetParent;
-        }
+        // parent = parent.offsetParent;
+        // }
     }
     else{
         position.x = evt.pageX;
@@ -153,4 +172,65 @@ function endLinkMode(pointFrom, pointTo, finished) {
     if (finished != undefined) {
         finished();
     }
+}
+
+function beginPattern() {
+    if (isRegister) {
+        $('#label').html('Please register your key pattern.');
+        $('#result').html('');
+    }
+    else {
+        $('#label').html('Please enter your key pattern.');
+        $('#result').html('');
+    }
+    init();
+}
+
+function endPattern() {
+    if (isRegister) {
+        savedPattern = patternNum;
+        patternNum = [];
+        isRegister = false;
+        uninit();
+        setTimeout(function () {
+            beginPattern();
+        }, 1000);
+    }
+    else {
+        if (isValid()) {
+            savedPattern = [];
+            isRegister = true;
+            $('#result').addClass('success');
+            $('#result').removeClass('failed');
+            $('#result').html('Congratulation your pattern is matched.');
+        }
+        else {
+            $('#result').addClass('failed');
+            $('#result').removeClass('success');
+            $('#result').html('Sorry your pattern is not matched.');
+        }
+        uninit();
+        setTimeout(function () {
+            beginPattern();
+        }, 2000);
+        patternNum = [];
+    }
+    
+    $('div#lines').html('');
+}
+
+function isValid() {
+    var result = true;
+    if (patternNum.length == 0 && savedPattern.length == 0) {
+        result = false;
+    }
+
+    if (patternNum.length == savedPattern.length) {
+        for (var index = 0; index < patternNum.length; index++) {
+            var curr = patternNum[index];
+            var saved = savedPattern[index];
+            result &= (curr == saved);
+        }
+    }
+    return result;
 }
